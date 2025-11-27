@@ -24,9 +24,9 @@ async def create_guardian(file: UploadFile, db: Session = Depends(get_db), index
     vector_n = obtener_vectores_normalizados(vector)
     dist, persona_id = consultar_embedding(index, vector_n)
     
-    #if dist[0][0] > 0.6:  # Umbral de distancia para considerar una coincidencia
-    #    raise HTTPException(status_code=404, detail="La imagen no coincide con ningún tutor registrado.")
-    return {"message": f"Distancia de coincidencia: {dist}"}
+    if dist[0][0] > 0.9:  # Umbral de distancia para considerar una coincidencia
+        raise HTTPException(status_code=404, detail="La imagen no coincide con ningún tutor registrado.")
+    #return {"message": f"Distancia de coincidencia: {dist}"}
     guardian_db = db.query(Guardian).filter(Guardian.guardianId == persona_id[0][0]).first()
 
     if not guardian_db:
@@ -45,6 +45,7 @@ async def enroll_guardian(guardian_id: int, file: UploadFile, db: Session = Depe
     contenido = await file.read()
     np_arr = np.frombuffer(contenido, np.uint8)
     img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     vector = generar_embedding(img)
     vector_n = obtener_vectores_normalizados(vector)
