@@ -11,6 +11,7 @@ class GuardianBase(BaseModel):
     phone: Optional[str] = None
     email: EmailStr
     address: Optional[str] = None
+    hasEmbedding: Optional[int] = 0  # 0 = No, 1 = Yes
 
 # Schema for creating a guardian
 class GuardianCreate(GuardianBase):

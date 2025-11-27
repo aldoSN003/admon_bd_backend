@@ -20,6 +20,7 @@ class Guardian(Base):
     faceEncodingUrl = Column(String(500))
     lastUpdate = Column(DateTime)
     registrationDate = Column(DateTime, default=datetime.now)
+    hasEmbedding = Column(Integer, default=0)  # 0 = No, 1 = Yes
 
     # Relationships
     students = relationship("StudentGuardian", back_populates="guardian")

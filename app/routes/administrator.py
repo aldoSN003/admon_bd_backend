@@ -99,7 +99,7 @@ def delete_administrator(administrator_id: int, db: Session = Depends(get_db)):
 @router.post("/login")
 def login_administrator(credentials: AdministratorLogin, db: Session = Depends(get_db)):
     admin = db.query(Administrator).filter(Administrator.username == credentials.username).first()
-
+    
     if not admin or not pwd_context.verify(credentials.password, admin.password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
 

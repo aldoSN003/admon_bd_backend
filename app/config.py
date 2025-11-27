@@ -4,8 +4,8 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent  # /home/.../admon_bd_backend
+#ENV_PATH = BASE_DIR / ".env.local" #Para trabajar con una BD local
 ENV_PATH = BASE_DIR / ".env"
-
 
 class Settings(BaseSettings):
     # Database Configuration

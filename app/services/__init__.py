@@ -1,0 +1,1 @@
+from app.services.face_recognition import generar_embedding, obtener_vectores_normalizados, cargar_index, insertar_embedding, consultar_embedding

@@ -1,9 +1,34 @@
 from fastapi import FastAPI
+from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
-from app.routes import administrator, guardian, student, student_guardian, pickup_log
+from app.routes import administrator, guardian, student, student_guardian, pickup_log, face_recognition
+from app.models import Administrator
+from app.database.database import SessionLocal
+from sqlalchemy.orm import Session
 
 settings = get_settings()
+
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def create_admin():
+    db = SessionLocal()
+    # Check if admin user already exists
+    existing_admin = db.query(Administrator).filter(Administrator.username == "admin").first()
+    if not existing_admin:
+        hashed_password = pwd_context.hash("admin123")  # Default password
+        admin = Administrator(
+            firstName="Abraham",
+            lastNamePaternal="Arteaga",
+            lastNameMaternal="Arteaga",
+            username="admin",
+            password=hashed_password,
+            email="abraham@gmail.com"
+        )
+        db.add(admin)
+        db.commit()
+
 
 # Create FastAPI app
 app = FastAPI(
@@ -36,7 +61,7 @@ app.include_router(guardian.router)
 app.include_router(student.router)
 app.include_router(student_guardian.router)
 app.include_router(pickup_log.router)
-
+app.include_router(face_recognition.router)
 
 # Root endpoint
 @app.get("/")
@@ -52,3 +77,5 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+create_admin()
